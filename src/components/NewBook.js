@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { Container } from '@material-ui/core';
 
-const NewBook = ({ show, addBook }) => {
+const NewBook = ({ show, addBook, booksGenreResetRef, setPage }) => {
   const [title, setTitle] = useState('');
   const [author, setAuhtor] = useState('');
   const [published, setPublished] = useState('');
@@ -13,7 +14,6 @@ const NewBook = ({ show, addBook }) => {
 
   const submit = async (e) => {
     e.preventDefault();
-
     addBook({
       variables: {
         title, published, author, genres,
@@ -25,6 +25,9 @@ const NewBook = ({ show, addBook }) => {
     setAuhtor('');
     setGenres([]);
     setGenre('');
+
+    booksGenreResetRef.current.resetGenre();
+    setPage("books")
   };
 
   const addGenre = () => {

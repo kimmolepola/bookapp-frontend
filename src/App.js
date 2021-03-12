@@ -1,23 +1,51 @@
+import { ThemeProvider, withStyles } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Hidden from '@material-ui/core/Hidden';
 import React, { useState, useEffect } from 'react';
 import {
   useQuery, useMutation, useSubscription, useApolloClient,
 } from 'react-apollo';
-import { gql } from 'apollo-boost';
-import Recommended from './components/Recommended';
-import Login from './components/Login';
-import CreateUser from './components/CreateUser';
-import Authors from './components/Authors';
-import Books from './components/Books';
-import NewBook from './components/NewBook';
 
-const App = () => {
+import Navigator from './Navigator';
+import Content from './Content';
+import Header from './Header';
+import { bookapptheme as theme, drawerWidth, styles } from './Theme';
+import { ME, BOOK_ADDED } from './gql_defs';
+
+function App({ classes }) {
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+
   const client = useApolloClient();
 
   const [user, setUser] = useState({ favoriteGenre: null });
-  const [notification, setNotification] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
   const [token, setToken] = useState(null);
   const [page, setPage] = useState('books');
+  const [notification, setNotification] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  const handleNotification = (notific) => {
+    setNotification(notific);
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  };
+
+  const handleError = (error) => {
+    if (error.graphQLErrors && error.graphQLErrors[0]) {
+      setErrorMessage(error.graphQLErrors[0].message);
+    } else {
+      setErrorMessage(error.toString());
+    }
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000);
+  };
+
 
   useEffect(() => {
     setToken(localStorage.getItem('book-app-user-token'));
@@ -30,112 +58,6 @@ const App = () => {
     setPage('login');
   };
 
-  const handleNotification = (notific) => {
-    setNotification(notific);
-    setTimeout(() => {
-      setNotification(null);
-    }, 10000);
-  };
-
-  const handleError = (error) => {
-    if (error.graphQLErrors && error.graphQLErrors[0]) {
-      setErrorMessage(error.graphQLErrors[0].message);
-    } else {
-      setErrorMessage(error.toString());
-    }
-    setTimeout(() => {
-      setErrorMessage(null);
-    }, 10000);
-  };
-
-  const BOOK_DETAILS = gql`
-    fragment BookDetails on Book {
-      title
-      published
-      author {name}
-      genres
-      id
-    }
-  `;
-  const ALL_GENRES = gql`{allGenres}`;
-  const ME = gql`{me{username, favoriteGenre}}`;
-  const ALL_AUTHORS = gql`{allAuthors{name born bookCount}}`;
-  const ALL_BOOKS = gql`query allBooks($genre: String){allBooks(genre: $genre){title, published, author{name}, genres, id}}`;
-  const BOOK_ADDED = gql`
-    subscription {
-      bookAdded {
-        ...BookDetails
-      }
-    }
-    ${BOOK_DETAILS}
-    `;
-  const EDIT_AUTHOR = gql`mutation ($name: String!, $born: Int!){
-    editAuthor(
-      name: $name,
-      setBornTo: $born,
-    ){name, born, bookCount}
-  }`;
-  const CREATE_BOOK = gql`mutation createBook($title: String!, $published: Int, $author: String, $genres: [String!]){
-    addBook(
-      title: $title,
-      published: $published,
-      author: $author,
-      genres: $genres,
-    ){
-      title
-      published
-      author {name}
-      genres
-      id
-    }
-  }`;
-  const CREATE_USER = gql`mutation createUser($username: String!, $favGenre: String!){
-    createUser(
-      username: $username,
-      favoriteGenre: $favGenre,
-    ) {
-      username
-    }
-  }`;
-  const LOGIN = gql`mutation login($username: String!, $password: String!){
-    login(
-      username: $username,
-      password: $password,
-    ) {
-      value
-    }
-  }`;
-
-  useSubscription(BOOK_ADDED, {
-    onSubscriptionData: ({ subscriptionData }) => {
-      const book = subscriptionData.data.bookAdded;
-      const content = `title: ${book.title}, author: ${book.author.name}, published: ${book.published}, genres: ${book.genres.join(', ')}`;
-      handleNotification(`book added: ${content}`);
-      setPage('books');
-    },
-  });
-
-  const [login] = useMutation(LOGIN, {
-    onError: handleError,
-  });
-  const [createUser] = useMutation(CREATE_USER, {
-    onError: handleError,
-  });
-  const [editAuthor] = useMutation(EDIT_AUTHOR, {
-    onError: handleError,
-    refetchQueries: [{ query: ALL_AUTHORS }],
-  });
-  const [addBook] = useMutation(CREATE_BOOK, {
-    onError: handleError,
-    refetchQueries: [
-      { query: ALL_AUTHORS },
-      { query: ALL_BOOKS, variables: { genre: '' } },
-      { query: ALL_BOOKS, variables: { genre: user ? user.favoriteGenre : null } },
-      { query: ALL_GENRES }],
-  });
-
-  const authors = useQuery(ALL_AUTHORS);
-  const genresResult = useQuery(ALL_GENRES);
 
   useEffect(() => {
     if (token) {
@@ -150,84 +72,58 @@ const App = () => {
     }
   }, [token, ME, client]);
 
-  const displayIfUser = { display: user && user.username ? '' : 'none' };
-  const displayIfNoUser = { display: user && user.username ? 'none' : '' };
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const book = subscriptionData.data.bookAdded;
+      const content = `title: ${book.title}, author: ${book.author.name}, published: ${book.published}, genres: ${book.genres.join(', ')}`;
+      handleNotification(`book added: ${content}`);
+      setPage('books');
+    },
+  });
 
-  const booksGenreResetRef = React.createRef();
+  const handleClick = () => {
+    console.log('clickc');
+  };
 
   return (
-    <div>
-      {notification && (
-        <div style={{ color: 'green' }}>
-          {notification}
+    <ThemeProvider theme={theme}>
+      <div className={classes.root}>
+        <CssBaseline />
+        <nav className={classes.drawer}>
+          <Hidden smUp implementation="js">
+            <Navigator
+              PaperProps={{ style: { width: drawerWidth } }}
+              variant="temporary"
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+            />
+          </Hidden>
+          <Hidden xsDown implementation="css">
+            <Navigator setPage={setPage} PaperProps={{ style: { width: drawerWidth } }} />
+          </Hidden>
+        </nav>
+        <div className={classes.app}>
+          <Header onDrawerToggle={handleDrawerToggle} />
+          <main className={classes.main}>
+            <Content
+              page={page}
+              user={user}
+              setPage={setPage}
+              client={client}
+              setToken={setToken}
+              handleNotification={handleNotification}
+              handleError={handleError}
+              notification={notification}
+              errorMessage={errorMessage}
+            />
+          </main>
+          <footer className={classes.footer}>
+            footer
+          </footer>
         </div>
-      )}
-      {errorMessage
-        && (
-          <div style={{ color: 'red' }}>
-            {errorMessage}
-          </div>
-        )}
-      <div>
-        <button type="button" onClick={() => setPage('authors')}>authors</button>
-        <button
-          type="button"
-          onClick={() => {
-            setPage('books');
-            booksGenreResetRef.current.resetGenre();
-          }}
-        >books
-        </button>
-        <button style={displayIfUser} type="button" onClick={() => setPage('add')}>add book</button>
-        <button style={displayIfUser} type="button" onClick={() => setPage('recommended')}>recommended</button>
-        <button style={displayIfUser} type="button" onClick={() => handleLogout()}>logout</button>
-        <button style={displayIfNoUser} type="button" onClick={() => setPage('createUser')}>register new user</button>
-        <button style={displayIfNoUser} type="button" onClick={() => setPage('login')}>login</button>
       </div>
-
-      <div>
-        <Authors
-          displayIfUser={displayIfUser}
-          handleError={handleError}
-          editAuthor={editAuthor}
-          result={authors}
-          show={page === 'authors'}
-        />
-
-        <Books
-          ref={booksGenreResetRef}
-          ALL_BOOKS={ALL_BOOKS}
-          genresResult={genresResult}
-          show={page === 'books'}
-        />
-
-        <NewBook
-          addBook={addBook}
-          show={page === 'add'}
-        />
-
-        <Recommended
-          client={client}
-          ALL_BOOKS={ALL_BOOKS}
-          user={user}
-          show={page === 'recommended'}
-        />
-
-        <CreateUser
-          handleNotification={handleNotification}
-          createUser={createUser}
-          show={page === 'createUser'}
-        />
-
-        <Login
-          setPage={setPage}
-          setToken={setToken}
-          login={login}
-          show={page === 'login'}
-        />
-      </div>
-    </div>
+    </ThemeProvider>
   );
-};
+}
 
-export default App;
+export default withStyles(styles)(App);
