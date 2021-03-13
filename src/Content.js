@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  useQuery, useMutation, useSubscription, useApolloClient,
+  useQuery, useMutation,
 } from 'react-apollo';
 import Recommended from './components/Recommended';
 import Login from './components/Login';
@@ -10,6 +10,7 @@ import CreateUser from './components/CreateUser';
 import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
+import LoremIpsum from './components/LoremIpsum';
 import {
   LOGIN, CREATE_USER, EDIT_AUTHOR, ALL_AUTHORS, CREATE_BOOK, ALL_BOOKS, ALL_GENRES,
 } from './gql_defs';
@@ -39,6 +40,8 @@ const styles = (theme) => ({
 
 
 function Content({
+  genre,
+  setGenre,
   page,
   setPage,
   client,
@@ -48,6 +51,7 @@ function Content({
   handleError,
   errorMessage,
   notification,
+  tab,
 }) {
   const displayIfUser = { display: user && user.username ? '' : 'none' };
   const displayIfNoUser = { display: user && user.username ? 'none' : '' };
@@ -77,7 +81,9 @@ function Content({
   const authors = useQuery(ALL_AUTHORS);
   const genresResult = useQuery(ALL_GENRES);
 
-  console.log('page: ', page);
+
+  const booksResult = useQuery(ALL_BOOKS, { variables: { genre } });
+
 
   return (
     <div>
@@ -97,29 +103,32 @@ function Content({
         handleError={handleError}
         editAuthor={editAuthor}
         result={authors}
-        show={page === 'authors'}
+        show={page === 'Authors'}
       />
 
       <Books
-        ref={booksGenreResetRef}
-        ALL_BOOKS={ALL_BOOKS}
+        booksResult={booksResult}
         genresResult={genresResult}
-        show={page === 'books'}
-      />
+        show={page === 'Books' && tab === 0}
+        genre={genre}
+        setGenre={setGenre}
 
-      <NewBook
-        booksGenreResetRef={booksGenreResetRef}
-        setPage={setPage}
-        addBook={addBook}
-        show={page === 'add'}
       />
 
       <Recommended
         client={client}
         ALL_BOOKS={ALL_BOOKS}
         user={user}
-        show={page === 'recommended'}
+        show={page === 'Books' && tab === 1}
       />
+
+      <NewBook
+        booksGenreResetRef={booksGenreResetRef}
+        setPage={setPage}
+        addBook={addBook}
+        show={page === 'Books' && tab === 2}
+      />
+
 
       <CreateUser
         handleNotification={handleNotification}
@@ -133,6 +142,14 @@ function Content({
         login={login}
         show={page === 'login'}
       />
+
+      <LoremIpsum
+        setPage={setPage}
+        setToken={setToken}
+        show={page === 'LoremIpsum'}
+        tab={tab}
+      />
+
     </div>
   );
 }

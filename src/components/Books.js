@@ -1,16 +1,19 @@
 import React, { useState, useImperativeHandle } from 'react';
-import { useQuery } from 'react-apollo';
+import { makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 
-const Books = React.forwardRef(({ show, genresResult, ALL_BOOKS }, ref) => {
-  const [genre, setGenre] = useState('');
-
+const Books = ({
+  show, genresResult, genre, setGenre, booksResult,
+}) => {
   const resetGenre = () => {
     setGenre('');
   };
-
-  useImperativeHandle(ref, () => ({ resetGenre }));
-
-  const booksResult = useQuery(ALL_BOOKS, { variables: { genre } });
 
   if (!show) {
     return null;
@@ -31,34 +34,77 @@ const Books = React.forwardRef(({ show, genresResult, ALL_BOOKS }, ref) => {
   );
 
   return (
-    <div>
-      <h2>books</h2>
-      <div style={{ display: genre === '' ? 'none' : '' }}>in genre <b>{genre}</b></div><p />
-      <table>
-        <tbody>
-          <tr>
-            <th style={{ textAlign: 'left' }}>
-              <b>name</b>
-            </th>
-            <th style={{ textAlign: 'left' }}>
-              <b>author</b>
-            </th>
-            <th style={{ textAlign: 'left' }}>
-              <b>published</b>
-            </th>
-          </tr>
-          {books ? books.map((x, y) => (
-            <tr key={x.title.concat(y)}>
-              <td>{x.title}</td>
-              <td>{x.author.name}</td>
-              <td>{x.published}</td>
-            </tr>
-          )) : null}
-        </tbody>
-      </table>
-      <Genres />
-    </div>
+    <Paper className={classes.root}>
+      <TableContainer className={classes.container}>
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
+            <TableRow>
+              {columns.map((column) => (
+                <TableCell
+                  key={column.id}
+                  align={column.align}
+                  style={{ minWidth: column.minWidth }}
+                >
+                  {column.label}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+              <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                {columns.map((column) => {
+                  const value = row[column.id];
+                  return (
+                    <TableCell key={column.id} align={column.align}>
+                      {column.format && typeof value === 'number' ? column.format(value) : value}
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 100]}
+        component="div"
+        count={rows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
+    </Paper>
+
   );
-});
+};
 
 export default Books;
+
+
+/*
+    <TableContainer component={Paper}>
+      <Table stickyHeader aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell align="right">Author</TableCell>
+            <TableCell align="right">Published</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {books ? books.map((book, i) => (
+            <TableRow key={book.title.concat(i)}>
+              <TableCell component="th" scope="row">
+                {book.title}
+              </TableCell>
+              <TableCell align="right">{book.author.name}</TableCell>
+              <TableCell align="right">{book.published}</TableCell>
+            </TableRow>
+          )) : null}
+        </TableBody>
+      </Table>
+    </TableContainer>
+
+*/

@@ -1,9 +1,9 @@
-import { ThemeProvider, withStyles } from '@material-ui/core/styles';
+import { ThemeProvider, withStyles, makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Hidden from '@material-ui/core/Hidden';
 import React, { useState, useEffect } from 'react';
 import {
-  useQuery, useMutation, useSubscription, useApolloClient,
+  useSubscription, useApolloClient,
 } from 'react-apollo';
 
 import Navigator from './Navigator';
@@ -24,9 +24,11 @@ function App({ classes }) {
 
   const [user, setUser] = useState({ favoriteGenre: null });
   const [token, setToken] = useState(null);
-  const [page, setPage] = useState('books');
+  const [page, setPage] = useState('Books');
   const [notification, setNotification] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [tab, setTab] = useState(0);
+  const [genre, setGenre] = useState('');
 
   const handleNotification = (notific) => {
     setNotification(notific);
@@ -77,13 +79,9 @@ function App({ classes }) {
       const book = subscriptionData.data.bookAdded;
       const content = `title: ${book.title}, author: ${book.author.name}, published: ${book.published}, genres: ${book.genres.join(', ')}`;
       handleNotification(`book added: ${content}`);
-      setPage('books');
+      setPage('Books');
     },
   });
-
-  const handleClick = () => {
-    console.log('clickc');
-  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -103,9 +101,11 @@ function App({ classes }) {
           </Hidden>
         </nav>
         <div className={classes.app}>
-          <Header onDrawerToggle={handleDrawerToggle} />
+          <Header setTab={setTab} page={page} onDrawerToggle={handleDrawerToggle} />
           <main className={classes.main}>
             <Content
+              genre={genre}
+              setGenre={setGenre}
               page={page}
               user={user}
               setPage={setPage}
@@ -115,6 +115,7 @@ function App({ classes }) {
               handleError={handleError}
               notification={notification}
               errorMessage={errorMessage}
+              tab={tab}
             />
           </main>
           <footer className={classes.footer}>

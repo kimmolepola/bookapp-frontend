@@ -113,6 +113,7 @@ export const bookapptheme = {
 export const drawerWidth = 256;
 
 export const styles = {
+
   root: {
     display: 'flex',
     minHeight: '100vh',

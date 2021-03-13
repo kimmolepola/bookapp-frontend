@@ -7,25 +7,19 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import HomeIcon from '@material-ui/icons/Home';
-import PeopleIcon from '@material-ui/icons/People';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import AddIcon from '@material-ui/icons/Add';
-import BookIcon from '@material-ui/icons/Book';
-import SettingsEthernetIcon from '@material-ui/icons/SettingsEthernet';
-import SettingsInputComponentIcon from '@material-ui/icons/SettingsInputComponent';
-import TimerIcon from '@material-ui/icons/Timer';
-import SettingsIcon from '@material-ui/icons/Settings';
-import PhonelinkSetupIcon from '@material-ui/icons/PhonelinkSetup';
+import {
+  People as PeopleIcon,
+  LibraryBooks as LibraryBooksIcon,
+  ViewColumn as ViewColumnIcon,
+} from '@material-ui/icons';
 
 const categories = [
   {
     id: 'Develop',
     children: [
-      { id: 'books', icon: <LibraryBooksIcon />, active: true },
-      { id: 'authors', icon: <PeopleIcon /> },
-      { id: 'add', icon: <AddIcon /> },
-      { id: 'recommended', icon: <BookIcon /> },
+      { id: 'Books', icon: <LibraryBooksIcon />, active: true },
+      { id: 'Authors', icon: <PeopleIcon /> },
+      { id: 'LoremIpsum', icon: <ViewColumnIcon /> },
     ],
   },
 ];
@@ -77,10 +71,9 @@ function Navigator(props) {
 
   const onClick = ({ childId }) => {
     setPage(childId);
-    categories[0].children[0].active = childId == 'books'; // eslint-disable-line eqeqeq
-    categories[0].children[1].active = childId == 'authors'; // eslint-disable-line eqeqeq
-    categories[0].children[2].active = childId == 'add'; // eslint-disable-line eqeqeq
-    categories[0].children[3].active = childId == 'recommended'; // eslint-disable-line eqeqeq
+    categories[0].children[0].active = childId == 'Books'; // eslint-disable-line eqeqeq
+    categories[0].children[1].active = childId == 'Authors'; // eslint-disable-line eqeqeq
+    categories[0].children[2].active = childId == 'LoremIpsum'; // eslint-disable-line eqeqeq
   };
 
   return (
@@ -129,29 +122,3 @@ function Navigator(props) {
 
 
 export default withStyles(styles)(Navigator);
-
-/*
-
-    {
-        id: 'Quality',
-        children: [
-            { id: 'Analytics', icon: <SettingsIcon /> },
-            { id: 'Performance', icon: <TimerIcon /> },
-            { id: 'Test Lab', icon: <PhonelinkSetupIcon /> },
-        ],
-    },
-
-
-        </ListItem>
-                <ListItem className={clsx(classes.item, classes.itemCategory)}>
-                    <ListItemIcon className={classes.itemIcon}>
-                        <HomeIcon />
-                    </ListItemIcon>
-                    <ListItemText
-                        classes={{
-                            primary: classes.itemPrimary,
-                        }}
-                    >
-                        Project Overview
-          </ListItemText>
-*/
