@@ -19,6 +19,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import Popover from './Popover';
 
 function createData(name, calories, fat, carbs, protein) {
   return {
@@ -167,7 +168,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected } = props;
+  const { numSelected, onClick } = props;
 
   return (
     <Toolbar
@@ -193,7 +194,7 @@ const EnhancedTableToolbar = (props) => {
         </Tooltip>
       ) : (
         <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
+          <IconButton onClick={onClick} aria-label="filter list">
             <FilterListIcon />
           </IconButton>
         </Tooltip>
@@ -236,6 +237,23 @@ export default function Books({
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [popoverAnchorEl, setPopoverAnchorEl] = React.useState(null);
+  const [selectedGenres, setSelectedGenres] = React.useState([]);
+
+  const genres = genresResult && genresResult.data ? genresResult.data.allGenres : [];
+
+  React.useEffect(() => {
+    setSelectedGenres(genres);
+  }, [genresResult]);
+
+  const handlePopoverButtonClick = (event) => {
+    console.log('click');
+    setPopoverAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setPopoverAnchorEl(null);
+  };
 
   const resetGenre = () => {
     setGenre('');
@@ -253,10 +271,10 @@ export default function Books({
   const rows = books.map((book) => ({
     title: book.title,
     author: book.author.name,
-    genre: book.genres.join(', '),
+    genre: book.genres,
     published: book.published,
   }));
-  const genres = genresResult && genresResult.data ? genresResult.data.allGenres : null;
+
 
   console.log('books: ', rows);
 
@@ -322,8 +340,15 @@ export default function Books({
 
   return (
     <div className={classes.root}>
+      <Popover
+        handlePopoverClose={handlePopoverClose}
+        popoverAnchorEl={popoverAnchorEl}
+        genres={genres}
+        selectedGenres={selectedGenres}
+        setSelectedGenres={setSelectedGenres}
+      />
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} onClick={handlePopoverButtonClick} />
         <TableContainer>
           <Table
             className={classes.table}
@@ -344,6 +369,12 @@ export default function Books({
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
+                  const hasSelectedGenre = row.genre.some((g) => selectedGenres.includes(g));
+
+                  if (!hasSelectedGenre) {
+                    return null;
+                  }
+
                   const isItemSelected = isSelected(row.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -376,7 +407,7 @@ export default function Books({
                         {row.title}
                       </TableCell>
                       <TableCell align="left">{row.author}</TableCell>
-                      <TableCell align="left">{row.genre}</TableCell>
+                      <TableCell align="left">{row.genre.join(', ')}</TableCell>
                       <TableCell align="right">{row.published}</TableCell>
                     </TableRow>
                   );
