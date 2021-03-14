@@ -6,6 +6,9 @@ import {
   useSubscription, useApolloClient,
 } from 'react-apollo';
 
+import Slide from '@material-ui/core/Slide';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import Navigator from './Navigator';
 import Content from './Content';
 import Header from './Header';
@@ -27,23 +30,52 @@ function App({ classes }) {
   const [page, setPage] = useState('Books');
   const [notification, setNotification] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [tab, setTab] = useState(0);
-  const [genre, setGenre] = useState('');
+  const [tab, setTab] = useState(2);
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarTransition, setSnackbarTransition] = React.useState(undefined);
+  const [snackbarMessage, setSnackbarMessage] = React.useState('');
+
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
+  const Trans = ({ color }) => (
+    function TransitionLeft(props) {
+      return <Slide {...props} style={{ backgroundColor: color }} direction="left" />;
+    }
+  );
+
+  const snackbarHandleClick = (Transition) => {
+    setSnackbarTransition(() => Transition);
+    setSnackbarOpen(true);
+  };
+
+  const snackbarHandleClose = () => {
+    setSnackbarOpen(false);
+  };
 
   const handleNotification = (notific) => {
+    setSnackbarMessage(notific);
+    snackbarHandleClick(Trans({ color: '#5cb85c' }));
     setNotification(notific);
     setTimeout(() => {
+      snackbarHandleClose();
       setNotification(null);
     }, 5000);
   };
 
   const handleError = (error) => {
     if (error.graphQLErrors && error.graphQLErrors[0]) {
+      setSnackbarMessage(error.graphQLErrors[0].message);
+      snackbarHandleClick(Trans({ color: '#d9534f' }));
       setErrorMessage(error.graphQLErrors[0].message);
     } else {
+      setSnackbarMessage(error.toString());
+      snackbarHandleClick(Trans({ color: '#d9534f' }));
       setErrorMessage(error.toString());
     }
     setTimeout(() => {
+      snackbarHandleClose();
       setErrorMessage(null);
     }, 5000);
   };
@@ -66,7 +98,7 @@ function App({ classes }) {
       const setupUser = async () => {
         const usr = (await client.query({ query: ME, fetchPolicy: 'no-cache' })).data.me;
         setUser(usr);
-        handleNotification(`logged in as ${usr ? usr.username : null}`);
+        handleNotification(`Logged in as ${usr ? usr.username : null}`);
       };
       setupUser();
     } else {
@@ -78,7 +110,7 @@ function App({ classes }) {
     onSubscriptionData: ({ subscriptionData }) => {
       const book = subscriptionData.data.bookAdded;
       const content = `title: ${book.title}, author: ${book.author.name}, published: ${book.published}, genres: ${book.genres.join(', ')}`;
-      handleNotification(`book added: ${content}`);
+      handleNotification(`Book added: ${content}`);
       setPage('Books');
     },
   });
@@ -87,6 +119,15 @@ function App({ classes }) {
     <ThemeProvider theme={theme}>
       <div className={classes.root}>
         <CssBaseline />
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={snackbarOpen}
+          autoHideDuration={10000}
+          onClose={snackbarHandleClose}
+          TransitionComponent={snackbarTransition}
+          key={snackbarTransition ? snackbarTransition.name : ''}
+          message={snackbarMessage}
+        />
         <nav className={classes.drawer}>
           <Hidden smUp implementation="js">
             <Navigator
@@ -97,15 +138,13 @@ function App({ classes }) {
             />
           </Hidden>
           <Hidden xsDown implementation="css">
-            <Navigator setPage={setPage} PaperProps={{ style: { width: drawerWidth } }} />
+            <Navigator setTab={setTab} setPage={setPage} PaperProps={{ style: { width: drawerWidth } }} />
           </Hidden>
         </nav>
         <div className={classes.app}>
-          <Header setTab={setTab} page={page} onDrawerToggle={handleDrawerToggle} />
+          <Header tab={tab} setTab={setTab} page={page} onDrawerToggle={handleDrawerToggle} />
           <main className={classes.main}>
             <Content
-              genre={genre}
-              setGenre={setGenre}
               page={page}
               user={user}
               setPage={setPage}
@@ -113,9 +152,8 @@ function App({ classes }) {
               setToken={setToken}
               handleNotification={handleNotification}
               handleError={handleError}
-              notification={notification}
-              errorMessage={errorMessage}
               tab={tab}
+              setTab={setTab}
             />
           </main>
           <footer className={classes.footer}>
@@ -128,3 +166,15 @@ function App({ classes }) {
 }
 
 export default withStyles(styles)(App);
+
+/*
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={snackbarOpen}
+          onClose={snackbarHandleClose}
+          TransitionComponent={snackbarTransition}
+          message={snackbarMessage.message}
+          key={snackbarTransition ? snackbarTransition.name : ''}
+        >
+
+*/

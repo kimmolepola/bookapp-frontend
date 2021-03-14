@@ -231,6 +231,7 @@ export default function Books({
   booksResult, genresResult, show, genre, setGenre,
 }) {
   const classes = useStyles();
+
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('title');
   const [selected, setSelected] = React.useState([]);
@@ -242,8 +243,10 @@ export default function Books({
 
   const genres = genresResult && genresResult.data ? genresResult.data.allGenres : [];
 
+  console.log('selectedGenres: ', selectedGenres);
+
   React.useEffect(() => {
-    setSelectedGenres(genres);
+    setSelectedGenres([...genres, 'No genre']);
   }, [genresResult]);
 
   const handlePopoverButtonClick = (event) => {
@@ -275,8 +278,6 @@ export default function Books({
     published: book.published,
   }));
 
-
-  console.log('books: ', rows);
 
   const Genres = () => (
     <div>
@@ -367,14 +368,15 @@ export default function Books({
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
+                .reduce((total, row) => {
+                  const hasSelectedGenre = row.genre.some((g) => selectedGenres.includes(g));
+                  if (hasSelectedGenre || (row.genre.length === 0 && selectedGenres.includes('No genre'))) {
+                    total.push(row);
+                  }
+                  return total;
+                }, [])
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const hasSelectedGenre = row.genre.some((g) => selectedGenres.includes(g));
-
-                  if (!hasSelectedGenre) {
-                    return null;
-                  }
-
                   const isItemSelected = isSelected(row.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
 

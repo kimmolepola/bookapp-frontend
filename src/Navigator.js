@@ -67,9 +67,12 @@ const styles = (theme) => ({
 
 
 function Navigator(props) {
-  const { classes, setPage, ...other } = props;
+  const {
+    setTab, classes, setPage, ...other
+  } = props;
 
   const onClick = ({ childId }) => {
+    setTab(0);
     setPage(childId);
     categories[0].children[0].active = childId == 'Books'; // eslint-disable-line eqeqeq
     categories[0].children[1].active = childId == 'Authors'; // eslint-disable-line eqeqeq

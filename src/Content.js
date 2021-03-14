@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import {
   useQuery, useMutation,
 } from 'react-apollo';
+
 import Recommended from './components/Recommended';
 import Login from './components/Login';
 import CreateUser from './components/CreateUser';
@@ -40,8 +41,6 @@ const styles = (theme) => ({
 
 
 function Content({
-  genre,
-  setGenre,
   page,
   setPage,
   client,
@@ -49,15 +48,13 @@ function Content({
   setToken,
   handleNotification,
   handleError,
-  errorMessage,
-  notification,
   tab,
+  setTab,
 }) {
   const displayIfUser = { display: user && user.username ? '' : 'none' };
   const displayIfNoUser = { display: user && user.username ? 'none' : '' };
 
-  const booksGenreResetRef = React.createRef();
-
+  const [genre, setGenre] = useState('');
 
   const [login] = useMutation(LOGIN, {
     onError: handleError,
@@ -84,20 +81,8 @@ function Content({
 
   const booksResult = useQuery(ALL_BOOKS, { variables: { genre } });
 
-
   return (
     <div>
-      {notification && (
-      <div style={{ color: 'green' }}>
-        {notification}
-      </div>
-      )}
-      {errorMessage
-                    && (
-                    <div style={{ color: 'red' }}>
-                      {errorMessage}
-                    </div>
-                    )}
       <Authors
         displayIfUser={displayIfUser}
         handleError={handleError}
@@ -123,10 +108,11 @@ function Content({
       />
 
       <NewBook
-        booksGenreResetRef={booksGenreResetRef}
-        setPage={setPage}
+        setTab={setTab}
         addBook={addBook}
         show={page === 'Books' && tab === 2}
+        setGenre={setGenre}
+        handleNotification={handleNotification}
       />
 
 
@@ -157,6 +143,28 @@ function Content({
 export default withStyles(styles)(Content);
 
 /*
+
+ <Recommended
+        client={client}
+        ALL_BOOKS={ALL_BOOKS}
+        user={user}
+        show={page === 'Books' && tab === 1}
+      />
+
+
+      {notification && (
+      <div style={{ color: 'green' }}>
+        {notification}
+
+      </div>
+      )}
+      {errorMessage
+                    && (
+                    <div style={{ color: 'red' }}>
+                      {errorMessage}
+                    </div>
+                    )}
+
 
     return (
         <Paper className={classes.paper}>

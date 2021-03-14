@@ -107,6 +107,11 @@ export const bookapptheme = {
         height: 32,
       },
     },
+    MuiSnackbarContent: {
+      message: {
+        color: 'white',
+      },
+    },
   },
 };
 

@@ -42,11 +42,10 @@ const styles = (theme) => ({
 
 function Header(props) {
   const {
-    setTab, page, classes, onDrawerToggle,
+    setTab, page, classes, onDrawerToggle, tab,
   } = props;
 
   const onTabChange = (event, value) => {
-    console.log('click: ', value);
     setTab(value);
   };
 
@@ -126,7 +125,7 @@ function Header(props) {
       >
         {page == 'Books' // eslint-disable-line eqeqeq
         && (
-        <Tabs value={0} textColor="inherit" onChange={onTabChange}>
+        <Tabs value={tab} textColor="inherit" onChange={onTabChange}>
           <Tab textColor="inherit" label="Library" />
           <Tab textColor="inherit" label="Recommended" />
           <Tab textColor="inherit" label="Add book" />
@@ -138,7 +137,7 @@ function Header(props) {
         )}
         {page == 'LoremIpsum' // eslint-disable-line eqeqeq
         && (
-        <Tabs value={0} textColor="inherit" onChange={onTabChange}>
+        <Tabs value={tab} textColor="inherit" onChange={onTabChange}>
           <Tab textColor="inherit" label="Lorem" />
           <Tab textColor="inherit" label="Ipsum" />
           <Tab textColor="inherit" label="Dolor" />

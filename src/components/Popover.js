@@ -5,10 +5,18 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import Container from '@material-ui/core/Container';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import { bookapptheme } from '../Theme';
 
 const useStyles = makeStyles((theme) => ({
-  typography: {
-    // padding: theme.spacing(2),
+  root: {
+    display: 'flex',
+  },
+  formControl: {
+    margin: theme.spacing(2),
   },
 }));
 
@@ -20,14 +28,11 @@ export default function SimplePopover({
   selectedGenres,
 }) {
   const handleChange = (event) => {
-    console.log(selectedGenres);
-    console.log(event.target);
     if (event.target.checked) {
       setSelectedGenres([...selectedGenres, event.target.id]);
     } else {
       const newArray = selectedGenres.reduce((total, current) => {
         if (event.target.id !== current) {
-          console.log('push: ', current);
           total.push(current);
         }
         return total;
@@ -38,12 +43,12 @@ export default function SimplePopover({
 
   const classes = useStyles();
 
-  console.log('anchorEl', anchorEl);
-
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
-  genres.sort(
+  const genresNew = [...genres, 'No genre'];
+
+  genresNew.sort(
     (a, b) => {
       const _a = a[0].toLowerCase(); // eslint-disable-line
       const _b = b[0].toLowerCase(); // eslint-disable-line
@@ -70,19 +75,26 @@ export default function SimplePopover({
           horizontal: 'center',
         }}
       >
-        <div style={{ backgroundColor: 'lightGrey', padding: 10, marginBottom: 5 }}><b>Filter genres</b></div>
-        <div>
-          {genres.map((x, y) => (
-            <div style={{ paddingRight: 30 }} key={x.concat(y)}>
-              <Checkbox
-                id={x}
-                checked={selectedGenres.includes(x)}
-                onChange={handleChange}
-                inputProps={{ 'aria-label': 'primary checkbox' }}
+        <div className={classes.root}>
+          <FormControl className={classes.formControl}>
+            <FormLabel>Filter genres</FormLabel>
+            {genresNew.map((x, y) => (
+              <FormControlLabel
+                key={x.concat(y)}
+                control={(
+                  <Checkbox
+                    id={x}
+                    checked={selectedGenres.includes(x)}
+                    onChange={handleChange}
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                    color="primary"
+                  />
+              )}
+                label={x}
+                labelPlacement="end"
               />
-              {x}
-            </div>
-          ))}
+            ))}
+          </FormControl>
         </div>
       </Popover>
     </div>
