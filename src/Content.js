@@ -16,6 +16,8 @@ import {
   LOGIN, CREATE_USER, EDIT_AUTHOR, ALL_AUTHORS, CREATE_BOOK, ALL_BOOKS, ALL_GENRES,
 } from './gql_defs';
 
+import EditAuthors from './components/EditAuthors';
+
 const styles = (theme) => ({
   paper: {
     maxWidth: 936,
@@ -84,11 +86,16 @@ function Content({
   return (
     <div>
       <Authors
-        displayIfUser={displayIfUser}
+        result={authors}
+        show={page === 'Authors' && tab === 0}
+      />
+
+      <EditAuthors
+        handleNotification={handleNotification}
         handleError={handleError}
         editAuthor={editAuthor}
         result={authors}
-        show={page === 'Authors'}
+        show={page === 'Authors' && tab === 1}
       />
 
       <Books

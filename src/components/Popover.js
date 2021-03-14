@@ -46,9 +46,7 @@ export default function SimplePopover({
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
-  const genresNew = [...genres, 'No genre'];
-
-  genresNew.sort(
+  genres.sort(
     (a, b) => {
       const _a = a[0].toLowerCase(); // eslint-disable-line
       const _b = b[0].toLowerCase(); // eslint-disable-line
@@ -57,6 +55,8 @@ export default function SimplePopover({
       return 0;
     },
   );
+
+  const genresNew = [...genres, 'No genre'];
 
 
   return (

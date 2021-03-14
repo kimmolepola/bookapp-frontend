@@ -27,10 +27,10 @@ function App({ classes }) {
 
   const [user, setUser] = useState({ favoriteGenre: null });
   const [token, setToken] = useState(null);
-  const [page, setPage] = useState('Books');
+  const [page, setPage] = useState('Authors');
   const [notification, setNotification] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [tab, setTab] = useState(2);
+  const [tab, setTab] = useState(1);
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarTransition, setSnackbarTransition] = React.useState(undefined);
   const [snackbarMessage, setSnackbarMessage] = React.useState('');
@@ -135,14 +135,17 @@ function App({ classes }) {
               variant="temporary"
               open={mobileOpen}
               onClose={handleDrawerToggle}
+              setTab={setTab}
+              page={page}
+              setPage={setPage}
             />
           </Hidden>
           <Hidden xsDown implementation="css">
-            <Navigator setTab={setTab} setPage={setPage} PaperProps={{ style: { width: drawerWidth } }} />
+            <Navigator setTab={setTab} page={page} setPage={setPage} PaperProps={{ style: { width: drawerWidth } }} />
           </Hidden>
         </nav>
         <div className={classes.app}>
-          <Header tab={tab} setTab={setTab} page={page} onDrawerToggle={handleDrawerToggle} />
+          <Header user={user} tab={tab} setTab={setTab} page={page} onDrawerToggle={handleDrawerToggle} />
           <main className={classes.main}>
             <Content
               page={page}

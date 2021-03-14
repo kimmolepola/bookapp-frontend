@@ -42,7 +42,7 @@ const styles = (theme) => ({
 
 function Header(props) {
   const {
-    setTab, page, classes, onDrawerToggle, tab,
+    setTab, page, classes, onDrawerToggle, tab, user,
   } = props;
 
   const onTabChange = (event, value) => {
@@ -123,7 +123,13 @@ function Header(props) {
         position="static"
         elevation={0}
       >
-        {page == 'Books' // eslint-disable-line eqeqeq
+        {page === 'Books' && (!user || (user && !user.username))
+        && (
+        <Tabs value={tab} textColor="inherit" onChange={onTabChange}>
+          <Tab textColor="inherit" label="Library" />
+        </Tabs>
+        )}
+        {page === 'Books' && user && user.username
         && (
         <Tabs value={tab} textColor="inherit" onChange={onTabChange}>
           <Tab textColor="inherit" label="Library" />
@@ -131,11 +137,21 @@ function Header(props) {
           <Tab textColor="inherit" label="Add book" />
         </Tabs>
         )}
-        {page == 'Authors' // eslint-disable-line eqeqeq
+        {page === 'Authors' && (!user || (user && !user.username))
         && (
-        <Tabs value={0} textColor="inherit" onChange={onTabChange} />
+        <Tabs value={tab} textColor="inherit" onChange={onTabChange}>
+          <Tab textColor="inherit" label="All authors" />
+          <Tab textColor="inherit" label="Edit" />
+        </Tabs>
         )}
-        {page == 'LoremIpsum' // eslint-disable-line eqeqeq
+        {page === 'Authors' && user && user.username
+        && (
+        <Tabs value={tab} textColor="inherit" onChange={onTabChange}>
+          <Tab textColor="inherit" label="All authors" />
+          <Tab textColor="inherit" label="Edit" />
+        </Tabs>
+        )}
+        {page === 'LoremIpsum'
         && (
         <Tabs value={tab} textColor="inherit" onChange={onTabChange}>
           <Tab textColor="inherit" label="Lorem" />

@@ -68,15 +68,17 @@ const styles = (theme) => ({
 
 function Navigator(props) {
   const {
-    setTab, classes, setPage, ...other
+    setTab, classes, setPage, page, ...other
   } = props;
+
+  categories[0].children[0].active = page === 'Books';
+  categories[0].children[1].active = page === 'Authors';
+  categories[0].children[2].active = page === 'LoremIpsum';
+
 
   const onClick = ({ childId }) => {
     setTab(0);
     setPage(childId);
-    categories[0].children[0].active = childId == 'Books'; // eslint-disable-line eqeqeq
-    categories[0].children[1].active = childId == 'Authors'; // eslint-disable-line eqeqeq
-    categories[0].children[2].active = childId == 'LoremIpsum'; // eslint-disable-line eqeqeq
   };
 
   return (
