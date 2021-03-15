@@ -19,7 +19,7 @@ const useFormStyles = makeStyles((theme) => ({
   root: {
     '& .MuiTextField-root': {
       margin: theme.spacing(1),
-      width: 300,
+      width: 400,
     },
     button: {
       margin: theme.spacing(1),
@@ -144,10 +144,6 @@ export default function NewBook({
     setTab(0);
   };
 
-  const xonSubmit = () => {
-    console.log('submit');
-  };
-
   const addGenre = () => {
     setGenres(genres.concat(genre));
     setGenre('');
@@ -190,7 +186,7 @@ export default function NewBook({
           onSubmit={onSubmit}
           onError={(errors) => console.log(errors)}
         >
-          <div style={{ padding: 10 }}>
+          <div className={formClasses.root} style={{ padding: 10 }}>
 
             <div>
               <TextValidator

@@ -60,8 +60,6 @@ const Books = ({
   const books = booksResult && booksResult.data ? booksResult.data.allBooks : null;
   const genres = genresResult && genresResult.data ? genresResult.data.allGenres : null;
 
-  console.log('books: ', books);
-
   const Genres = () => (
     <div>
       {genres ? genres.map((x) => <button key={x} type="button" onClick={async () => { setGenre(x); }}>{x}</button>) : null}

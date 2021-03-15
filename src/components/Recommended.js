@@ -20,7 +20,9 @@ import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { useQuery } from 'react-apollo';
+import { CircularProgress } from '@material-ui/core';
 import Popover from './Popover';
+import { bookapptheme } from '../Theme';
 
 function createData(name, calories, fat, carbs, protein) {
   return {
@@ -171,7 +173,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected, onClick } = props;
+  const { numSelected, onClick, genre } = props;
 
   return (
     <Toolbar
@@ -185,7 +187,7 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-          Recommended for you
+            Recommended for you
         </Typography>
       )}
 
@@ -259,7 +261,7 @@ export default function Recommended({
   }
 
   if (result.loading) {
-    return <div>loading...</div>;
+    return <CircularProgress />;
   }
 
   const books = result.data.allBooks;
@@ -371,7 +373,10 @@ export default function Recommended({
     <div className={classes.root}>
 
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar genre={genre} numSelected={selected.length} />
+        <Typography style={{ paddingLeft: bookapptheme.spacing(2) }} className={classes.title} variant="caption" id="tableTitle" component="div">
+            Books in your favorite genre {genre}
+        </Typography>
         <TableContainer>
           <Table
             className={classes.table}

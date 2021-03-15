@@ -58,12 +58,6 @@ function Content({
 
   const [genre, setGenre] = useState('');
 
-  const [login] = useMutation(LOGIN, {
-    onError: handleError,
-  });
-  const [createUser] = useMutation(CREATE_USER, {
-    onError: handleError,
-  });
   const [editAuthor] = useMutation(EDIT_AUTHOR, {
     onError: handleError,
     refetchQueries: [{ query: ALL_AUTHORS }],
@@ -122,19 +116,6 @@ function Content({
         handleNotification={handleNotification}
       />
 
-
-      <CreateUser
-        handleNotification={handleNotification}
-        createUser={createUser}
-        show={page === 'createUser'}
-      />
-
-      <Login
-        setPage={setPage}
-        setToken={setToken}
-        login={login}
-        show={page === 'login'}
-      />
 
       <LoremIpsum
         setPage={setPage}

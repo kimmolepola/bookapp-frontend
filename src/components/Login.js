@@ -1,13 +1,60 @@
 import React, { useState } from 'react';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import {
+  TextField, Button, Container, Grid, Typography, Box,
+} from '@material-ui/core';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import { styles } from '../Theme';
 
-const Login = ({
-  show, login, setToken, setPage,
-}) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  if (!show) {
-    return null;
-  }
+function rand() {
+  return Math.round(Math.random() * 20) - 10;
+}
+
+function getModalStyle() {
+  const top = 50 + rand();
+  const left = 50 + rand();
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+/*
+const useStyles = makeStyles((theme) => ({
+  loginPaper: {
+    position: 'absolute',
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+}));
+*/
+
+const Login = React.forwardRef(({
+  show,
+  login,
+  setToken,
+  setPage,
+  setUsername,
+  setPassword,
+  username,
+  password,
+  classes,
+  setSignInModalOpen,
+  signInError,
+  handleSignInModalClose,
+  signUpFlow,
+}, ref) => {
+  // Material-ui comment: getModalStyle is not a pure function, we roll the style only on the first render
+  const [modalStyle] = React.useState(getModalStyle);
+
+  const onCancel = () => {
+    handleSignInModalClose();
+  };
+
   const submit = async (event) => {
     event.preventDefault();
     const result = await login({
@@ -22,25 +69,75 @@ const Login = ({
       localStorage.setItem('book-app-user-token', token);
       setUsername('');
       setPassword('');
-      setPage('books');
+      handleSignInModalClose();
     }
   };
   return (
-    <div>
-      <form onSubmit={submit}>
-        <div>
-          {'username '}
-          <input value={username} onChange={(x) => setUsername(x.target.value)} />
-        </div>
-        <div>
-          {'password '}
-          <input type="password" value={password} onChange={(x) => setPassword(x.target.value)} />
-        </div>
-        <button type="submit">login</button>
-      </form>
-      (Please use username: qwer password: qwer)
+    <div ref={ref}>
+      <Typography color="primary" variant="h3" gutterBottom>
+        Sign in
+      </Typography>
+      <ValidatorForm onSubmit={submit}>
+        <Grid style={{ marginTop: 60 }} container alignItems="center" direction="column">
+          <Typography style={{ margin: 20 }} color="error" variant="h6" display="block" gutterBottom>
+            {signInError}
+          </Typography>
+          {signUpFlow && (
+          <>
+            <Typography align="center" style={{ margin: 20 }} color="textSecondary" variant="h6" display="block" gutterBottom>
+              Sign up successful.<br />Please sign in.
+            </Typography>
+          </>
+          )}
+          <Box>
+            <Grid container spacing={2} alignItems="flex-start" direction="column">
+              <Grid item>
+                <TextValidator
+                  validators={['required']}
+                  errorMessages={['Username is required']}
+                  variant="outlined"
+                  id="username"
+                  label="Username"
+                  value={username}
+                  onChange={(x) => setUsername(x.target.value)}
+                />
+              </Grid>
+              <Grid item>
+                <TextValidator
+                  validators={['required']}
+                  errorMessages={['Password is required']}
+                  variant="outlined"
+                  id="password"
+                  label="Password"
+                  type="password"
+                  helperText={signUpFlow && 'password is "qwer"'}
+                  value={password}
+                  onChange={(x) => setPassword(x.target.value)}
+                />
+              </Grid>
+              <Grid item>
+                <Button onClick={onCancel} style={{ marginRight: 5 }} variant="contained" color="default">Cancel</Button>
+                <Button variant="contained" color="primary" type="submit">Login</Button>
+              </Grid>
+            </Grid>
+          </Box>
+          <Grid item style={{ marginTop: 40 }}>
+            {!signUpFlow
+            && (
+            <>
+              <Typography color="secondary" variant="caption" display="block" gutterBottom>
+              Please use username: qwer password: qwer
+              </Typography>
+            </>
+            )}
+          </Grid>
+        </Grid>
+      </ValidatorForm>
     </div>
   );
-};
+});
 
-export default Login;
+Login.displayName = 'Login';
+
+export default withStyles(styles)(Login);
+//

@@ -13,12 +13,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import { CircularProgress, IconButton } from '@material-ui/core';
 import Popover from './Popover';
 
 function createData(name, calories, fat, carbs, protein) {
@@ -243,14 +243,11 @@ export default function Books({
 
   const genres = genresResult && genresResult.data ? genresResult.data.allGenres : [];
 
-  console.log('selectedGenres: ', selectedGenres);
-
   React.useEffect(() => {
     setSelectedGenres([...genres, 'No genre']);
   }, [genresResult]);
 
   const handlePopoverButtonClick = (event) => {
-    console.log('click');
     setPopoverAnchorEl(event.currentTarget);
   };
 
@@ -267,7 +264,7 @@ export default function Books({
   }
 
   if (booksResult.loading || genresResult.loading) {
-    return <div>loading...</div>;
+    return <CircularProgress />;
   }
 
   const books = booksResult && booksResult.data ? booksResult.data.allBooks : null;

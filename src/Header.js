@@ -15,6 +15,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import { TramRounded } from '@material-ui/icons';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -42,11 +43,42 @@ const styles = (theme) => ({
 
 function Header(props) {
   const {
-    setTab, page, classes, onDrawerToggle, tab, user,
+    setTab,
+    page,
+    classes,
+    onDrawerToggle,
+    tab,
+    user,
+    handleLogout,
+    setSignInModalOpen,
+    setSignUpModalOpen,
+    setHelpModalOpen,
   } = props;
 
   const onTabChange = (event, value) => {
     setTab(value);
+  };
+
+  const onSignUp = () => {
+    setSignInModalOpen(false);
+    setSignUpModalOpen(true);
+    setHelpModalOpen(false);
+  };
+
+  const onSignIn = () => {
+    setSignInModalOpen(true);
+    setSignUpModalOpen(false);
+    setHelpModalOpen(false);
+  };
+
+  const onHelp = () => {
+    setSignInModalOpen(false);
+    setSignUpModalOpen(false);
+    setHelpModalOpen(true);
+  };
+
+  const onSignOut = () => {
+    handleLogout();
   };
 
   return (
@@ -67,23 +99,44 @@ function Header(props) {
               </Grid>
             </Hidden>
             <Grid item xs />
+            {(!user || !user.username) && (
             <Grid item>
-              <Link className={classes.link} href="#" variant="body2">
+              <Button onClick={onSignUp} className={classes.button} color="inherit" size="small" variant="outlined">Sign up</Button>
+            </Grid>
+            )}
+            {(!user || !user.username) && (
+            <Grid item>
+
+              <Button onClick={onSignIn} className={classes.button} color="inherit" size="small" variant="text">Sign in</Button>
+            </Grid>
+            )}
+            {(user && user.username) && (
+            <Grid item>
+              <Button onClick={onSignOut} className={classes.button} color="inherit" size="small" variant="text">Sign out</Button>
+            </Grid>
+            )}
+            {false && (
+            <div>
+              <Grid item xs />
+              <Grid item>
+                <Link className={classes.link} href="#" variant="body2">
                                 Go to docs
-              </Link>
-            </Grid>
-            <Grid item>
-              <Tooltip title="Alerts • No alerts">
-                <IconButton color="inherit">
-                  <NotificationsIcon />
+                </Link>
+              </Grid>
+              <Grid item>
+                <Tooltip title="Alerts • No alerts">
+                  <IconButton color="inherit">
+                    <NotificationsIcon />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid item>
+                <IconButton color="inherit" className={classes.iconButtonAvatar}>
+                  <Avatar src="/static/images/avatar/1.jpg" alt="My Avatar" />
                 </IconButton>
-              </Tooltip>
-            </Grid>
-            <Grid item>
-              <IconButton color="inherit" className={classes.iconButtonAvatar}>
-                <Avatar src="/static/images/avatar/1.jpg" alt="My Avatar" />
-              </IconButton>
-            </Grid>
+              </Grid>
+            </div>
+            )}
           </Grid>
         </Toolbar>
       </AppBar>
@@ -101,14 +154,18 @@ function Header(props) {
                 {page}
               </Typography>
             </Grid>
-            <Grid item>
-              <Button className={classes.button} variant="outlined" color="inherit" size="small">
-                                Web setup
-              </Button>
-            </Grid>
+            {false && (
+            <div>
+              <Grid item>
+                <Button className={classes.button} variant="outlined" color="inherit" size="small">
+                                      Web setup
+                </Button>
+              </Grid>
+            </div>
+            )}
             <Grid item>
               <Tooltip title="Help">
-                <IconButton color="inherit">
+                <IconButton onClick={onHelp} color="inherit">
                   <HelpIcon />
                 </IconButton>
               </Tooltip>
@@ -116,6 +173,7 @@ function Header(props) {
           </Grid>
         </Toolbar>
       </AppBar>
+
       <AppBar
         component="div"
         className={classes.secondaryBar}
@@ -141,7 +199,6 @@ function Header(props) {
         && (
         <Tabs value={tab} textColor="inherit" onChange={onTabChange}>
           <Tab textColor="inherit" label="All authors" />
-          <Tab textColor="inherit" label="Edit" />
         </Tabs>
         )}
         {page === 'Authors' && user && user.username

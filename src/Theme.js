@@ -124,7 +124,7 @@ export const styles = {
     minHeight: '100vh',
   },
   drawer: {
-    [theme.breakpoints.up('sm')]: {
+    [bookapptheme.breakpoints.up('sm')]: {
       width: drawerWidth,
       flexShrink: 0,
     },
@@ -136,11 +136,19 @@ export const styles = {
   },
   main: {
     flex: 1,
-    padding: theme.spacing(6, 4),
+    padding: bookapptheme.spacing(6, 4),
     background: '#eaeff1',
   },
   footer: {
-    padding: theme.spacing(2),
+    padding: bookapptheme.spacing(2),
     background: '#eaeff1',
+  },
+  loginPaper: {
+    position: 'absolute',
+    width: 400,
+    backgroundColor: bookapptheme.palette.background.paper,
+    border: '2px solid grey',
+    boxShadow: bookapptheme.shadows[5],
+    padding: bookapptheme.spacing(2, 4, 3),
   },
 };

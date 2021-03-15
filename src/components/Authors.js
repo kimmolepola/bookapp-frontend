@@ -19,6 +19,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import { CircularProgress } from '@material-ui/core';
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -222,7 +223,7 @@ export default function Authors({
   }
 
   if (result.loading) {
-    return <div>loading...</div>;
+    return <CircularProgress />;
   }
 
   const authors = result && result.data ? result.data.allAuthors : null;

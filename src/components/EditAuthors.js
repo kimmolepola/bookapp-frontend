@@ -10,7 +10,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
-import { IconButton, Button } from '@material-ui/core';
+import { IconButton, Button, CircularProgress } from '@material-ui/core';
 import { LibraryAdd } from '@material-ui/icons';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
@@ -171,14 +171,10 @@ export default function EditAuthor({
   };
 
 
-  const xonSubmit = () => {
-    console.log('submit');
-  };
-
   const authors = result && result.data ? result.data.allAuthors : null;
 
   if (!result.data) {
-    return (<div>loading...</div>);
+    return <CircularProgress />;
   }
 
   return (
