@@ -21,30 +21,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { useQuery } from 'react-apollo';
 import { CircularProgress } from '@material-ui/core';
-import Popover from './Popover';
 import { bookapptheme } from '../Theme';
-
-function createData(name, calories, fat, carbs, protein) {
-  return {
-    name, calories, fat, carbs, protein,
-  };
-}
-
-const rowsTemplate = [
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Donut', 452, 25.0, 51, 4.9),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Honeycomb', 408, 3.2, 87, 6.5),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Jelly Bean', 375, 0.0, 94, 0.0),
-  createData('KitKat', 518, 26.0, 65, 7.0),
-  createData('Lollipop', 392, 0.2, 98, 0.0),
-  createData('Marshmallow', 318, 0, 81, 2.0),
-  createData('Nougat', 360, 19.0, 9, 37.0),
-  createData('Oreo', 437, 18.0, 63, 4.0),
-];
 
 function descendingComparator(a, b, orderBy) {
   if (
@@ -173,7 +150,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected, onClick, genre } = props;
+  const { numSelected, onClick } = props;
 
   return (
     <Toolbar
@@ -223,7 +200,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
   table: {
-    minWidth: 400,
+
   },
   visuallyHidden: {
     border: 0,
@@ -269,53 +246,12 @@ export default function Recommended({
   if (!books || books.length === 0) {
     return <div><p />No books in your favorite genre <b>{genre}</b></div>;
   }
-
-  /*
-    const genres = genresResult && genresResult.data ? genresResult.data.allGenres : [];
-
-  React.useEffect(() => {
-    setSelectedGenres(genres);
-  }, [genresResult]);
-
-  const handlePopoverButtonClick = (event) => {
-    console.log('click');
-    setPopoverAnchorEl(event.currentTarget);
-  };
-
-  const handlePopoverClose = () => {
-    setPopoverAnchorEl(null);
-  };
-
-  const resetGenre = () => {
-    setGenre('');
-  };
-
-  if (!show) {
-    return null;
-  }
-
-  if (booksResult.loading || genresResult.loading) {
-    return <div>loading...</div>;
-  }
-*/
-
-  //  const books = booksResult && booksResult.data ? booksResult.data.allBooks : null;
   const rows = books.map((book) => ({
     title: book.title,
     author: book.author.name,
     genre: book.genres,
     published: book.published,
   }));
-
-  /*
-  const Genres = () => (
-    <div>
-      {genres ? genres.map((x) => <button key={x} type="button"
-      onClick={async () => { setGenre(x); }}>{x}</button>) : null}
-      <button type="button" onClick={() => resetGenre()}>all genres</button>
-    </div>
-  );
-*/
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -332,6 +268,7 @@ export default function Recommended({
     setSelected([]);
   };
 
+  /*
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
@@ -348,9 +285,9 @@ export default function Recommended({
         selected.slice(selectedIndex + 1),
       );
     }
-
     setSelected(newSelected);
   };
+  */
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -467,14 +404,3 @@ export default function Recommended({
     </div>
   );
 }
-
-/*
-        <EnhancedTableToolbar numSelected={selected.length} onClick={handlePopoverButtonClick} />
- <Popover
-        handlePopoverClose={handlePopoverClose}
-        popoverAnchorEl={popoverAnchorEl}
-        genres={genres}
-        selectedGenres={selectedGenres}
-        setSelectedGenres={setSelectedGenres}
-      />
-      */

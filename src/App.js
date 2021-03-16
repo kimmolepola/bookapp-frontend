@@ -1,20 +1,9 @@
-import { ThemeProvider, withStyles, makeStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Hidden from '@material-ui/core/Hidden';
+import { ThemeProvider, withStyles } from '@material-ui/core/styles';
 import React, { useState, useEffect } from 'react';
+import { useSubscription, useApolloClient, useMutation } from 'react-apollo';
 import {
-  useSubscription, useApolloClient, useMutation,
-} from 'react-apollo';
-
-import Slide from '@material-ui/core/Slide';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
-import {
-  Modal, Paper, Container, Grid, Typography,
+  Modal, Paper, Typography, Snackbar, CssBaseline, Hidden, Slide,
 } from '@material-ui/core';
-import Navigator from './Navigator';
-import Content from './Content';
-import Header from './Header';
 import {
   bookapptheme, bookapptheme as theme, drawerWidth, styles,
 } from './Theme';
@@ -23,22 +12,18 @@ import {
 } from './gql_defs';
 import CreateUser from './components/CreateUser';
 import Login from './components/Login';
+import Navigator from './Navigator';
+import Content from './Content';
+import Header from './Header';
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
 
 function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
   return {
     top: `${50}%`,
     left: `${50}%`,
     transform: `translate(-${50}%, -${50}%)`,
   };
 }
-
 
 function App({ classes }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -53,8 +38,6 @@ function App({ classes }) {
   const [user, setUser] = useState({ favoriteGenre: null });
   const [token, setToken] = useState(null);
   const [page, setPage] = useState('Books');
-  const [notification, setNotification] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
   const [tab, setTab] = useState(0);
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [snackbarTransition, setSnackbarTransition] = React.useState(undefined);
@@ -70,14 +53,8 @@ function App({ classes }) {
   const [signUpError, setSignUpError] = useState(null);
   const [signUpFlow, setSignUpFlow] = useState(false);
 
-  function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-  }
-
   const Trans = ({ color }) => (
     function TransitionLeft(props) {
-      console.log('props: ', props);
-
       return (
         <Slide
           {...props}
@@ -119,10 +96,8 @@ function App({ classes }) {
   const handleNotification = (notific) => {
     setSnackbarMessage(notific);
     snackbarHandleClick(Trans({ color: '#5cb85c' }));
-    setNotification(notific);
     setTimeout(() => {
       snackbarHandleClose();
-      setNotification(null);
     }, 5000);
   };
 
@@ -131,7 +106,6 @@ function App({ classes }) {
       ? error.graphQLErrors[0].message
       : error.toString();
     errorMsg = errorMsg.charAt(0).toUpperCase() + errorMsg.slice(1);
-    setErrorMessage(errorMsg);
     if (!signInModalOpen && !signUpModalOpen) {
       setSnackbarMessage(errorMsg);
       snackbarHandleClick(Trans({ color: '#d9534f' }));
@@ -143,13 +117,10 @@ function App({ classes }) {
     }
     setTimeout(() => {
       snackbarHandleClose();
-      setErrorMessage(null);
       setSignInError(null);
       setSignUpError(null);
     }, 5000);
   };
-
-  console.log('sign in error: ', signInError);
 
   useEffect(() => {
     setToken(localStorage.getItem('book-app-user-token'));
@@ -346,22 +317,3 @@ function App({ classes }) {
 }
 
 export default withStyles(styles)(App);
-
-/*
-
-<CreateUser
-            handleNotification={handleNotification}
-            createUser={createUser}
-          />
-
-
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          open={snackbarOpen}
-          onClose={snackbarHandleClose}
-          TransitionComponent={snackbarTransition}
-          message={snackbarMessage.message}
-          key={snackbarTransition ? snackbarTransition.name : ''}
-        >
-
-*/

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import {
-  TextField, Button, Container, Grid, Typography, Box,
+  Button, Grid, Typography, Box,
 } from '@material-ui/core';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { styles, bookapptheme } from '../Theme';
@@ -34,16 +34,12 @@ const useStyles = makeStyles((theme) => ({
 */
 
 const Login = React.forwardRef(({
-  show,
   login,
   setToken,
-  setPage,
   setUsername,
   setPassword,
   username,
   password,
-  classes,
-  setSignInModalOpen,
   signInError,
   handleSignInModalClose,
   signUpFlow,
@@ -93,6 +89,7 @@ const Login = React.forwardRef(({
             <Grid container spacing={2} alignItems="flex-start" direction="column">
               <Grid item>
                 <TextValidator
+                  autocapitalize="off"
                   validators={['required']}
                   errorMessages={['Username is required']}
                   variant="outlined"
@@ -104,6 +101,7 @@ const Login = React.forwardRef(({
               </Grid>
               <Grid item>
                 <TextValidator
+                  autocapitalize="off"
                   validators={['required']}
                   errorMessages={['Password is required']}
                   variant="outlined"
@@ -140,4 +138,3 @@ const Login = React.forwardRef(({
 Login.displayName = 'Login';
 
 export default withStyles(styles)(Login);
-//

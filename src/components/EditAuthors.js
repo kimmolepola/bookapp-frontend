@@ -2,19 +2,14 @@ import React, { useState } from 'react';
 import clsx from 'clsx'; // eslint-disable-line import/no-extraneous-dependencies
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
-import { IconButton, Button, CircularProgress } from '@material-ui/core';
-import { LibraryAdd } from '@material-ui/icons';
+import { Button, CircularProgress } from '@material-ui/core';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-
-
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -94,11 +89,11 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
   },
   paper: {
-    width: '100%',
+    maxWidth: 400,
     marginBottom: theme.spacing(2),
   },
   table: {
-    minWidth: 750,
+
   },
   visuallyHidden: {
     border: 0,
@@ -123,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function EditAuthor({
-  show, result, setTab, handleNotification, handleError, editAuthor,
+  show, result, handleNotification, editAuthor,
 }) {
   const [name, setName] = useState('');
   const [year, setYear] = useState('');
@@ -219,7 +214,6 @@ export default function EditAuthor({
         <ValidatorForm
           className={classes.formControl}
           onSubmit={onSubmit}
-          onError={(errors) => console.log(errors)}
         >
           <div>
             <TextValidator
@@ -257,108 +251,3 @@ export default function EditAuthor({
     </div>
   );
 }
-
-/*
-  const AddButton = () => (
-    <IconButton onClick={addGenre}>
-      <LibraryAdd />
-    </IconButton>
-  );
-
-  return (
-    <div className={classes.root}>
-
-      <Paper className={classes.paper}>
-        <EnhancedTableToolbar />
-        <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
-              classes={classes}
-
-            />
-          </Table>
-        </TableContainer>
-
-        <ValidatorForm
-          onSubmit={onSubmit}
-          onError={(errors) => console.log(errors)}
-        >
-          <div style={{ padding: 10 }}>
-
-            <div>
-              <TextValidator
-                error={false}
-                id="title"
-                label="Title"
-                value={title}
-                validators={['required']}
-                errorMessages={['This field is required']}
-                onChange={({ target }) => setTitle(target.value)}
-              />
-            </div>
-            <div>
-              <TextValidator
-                error={false}
-                id="author"
-                label="Author"
-                value={author}
-                validators={['required']}
-                errorMessages={['This field is required']}
-                onChange={({ target }) => setAuhtor(target.value)}
-              />
-            </div>
-            <div>
-              <TextValidator
-                error={false}
-                id="published"
-                label="Published"
-                value={published}
-                validators={['required', 'minNumber:-1000', 'maxNumber:3000']}
-                errorMessages={['This field is required', 'Enter publication year', 'Enter publication year']}
-                onChange={({ target }) => setPublished(target.value)}
-              />
-            </div>
-            <div>
-              <TextField
-                error={false}
-                id="genre"
-                label="Genre"
-                value={genre}
-                onChange={({ target }) => setGenre(target.value)}
-                InputProps={{ endAdornment: <AddButton /> }}
-              />
-            </div>
-            <div style={{ padding: 10 }}>
-              {genres.length > 0 ? `Selected genres: ${genres.join(', ')}` : null}
-            </div>
-            <Button
-              variant="outlined"
-              color="default"
-              className={formClasses.button}
-              style={{ marginRight: 5 }}
-              onClick={onReset}
-            > Reset
-            </Button>
-
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className={formClasses.button}
-            > Submit
-            </Button>
-
-          </div>
-        </ValidatorForm>
-
-
-      </Paper>
-
-    </div>
-  );
-}
-*/

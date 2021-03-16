@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import clsx from 'clsx'; // eslint-disable-line import/no-extraneous-dependencies
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -10,7 +9,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
-import { IconButton, Button } from '@material-ui/core';
+import {
+  IconButton, Button,
+} from '@material-ui/core';
 import { LibraryAdd } from '@material-ui/icons';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
@@ -19,7 +20,8 @@ const useFormStyles = makeStyles((theme) => ({
   root: {
     '& .MuiTextField-root': {
       margin: theme.spacing(1),
-      width: 400,
+      paddingRight: theme.spacing(2),
+      width: '100%',
     },
     button: {
       margin: theme.spacing(1),
@@ -89,11 +91,11 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
   },
   paper: {
-    width: '100%',
+    maxWidth: 500,
     marginBottom: theme.spacing(2),
   },
   table: {
-    minWidth: 750,
+
   },
   visuallyHidden: {
     border: 0,
@@ -166,7 +168,6 @@ export default function NewBook({
 
   return (
     <div className={classes.root}>
-
       <Paper className={classes.paper}>
         <EnhancedTableToolbar />
         <TableContainer>
@@ -177,14 +178,12 @@ export default function NewBook({
           >
             <EnhancedTableHead
               classes={classes}
-
             />
           </Table>
         </TableContainer>
 
         <ValidatorForm
           onSubmit={onSubmit}
-          onError={(errors) => console.log(errors)}
         >
           <div className={formClasses.root} style={{ padding: 10 }}>
 
@@ -256,48 +255,6 @@ export default function NewBook({
 
 
       </Paper>
-
     </div>
   );
 }
-
-/*
-
-<form onSubmit={onSubmit} className={formClasses.root} noValidate autoComplete="off">
-
-        <form onSubmit={submit}>
-          <div>
-            {'title '}
-            <input
-              value={title}
-              onChange={({ target }) => setTitle(target.value)}
-            />
-          </div>
-          <div>
-            {'author '}
-            <input
-              value={author}
-              onChange={({ target }) => setAuhtor(target.value)}
-            />
-          </div>
-          <div>
-            {'published '}
-            <input
-              type="number"
-              value={published}
-              onChange={({ target }) => setPublished(parseInt(target.value, 10))}
-            />
-          </div>
-          <div>
-            <input
-              value={genre}
-              onChange={({ target }) => setGenre(target.value)}
-            />
-            <button onClick={addGenre} type="button">add genre</button>
-          </div>
-          <div>
-          genres: {genres.join(' ')}
-          </div>
-          <button type="submit">create book</button>
-        </form>
-*/
