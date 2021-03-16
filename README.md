@@ -1,6 +1,6 @@
 # Bookapp
 
-Technologies: GraphQL, Apollo Client/Server, MongoDB, Material-UI, Azure Functions, AWS Lambda <br />
+Technologies: React, GraphQL, Apollo Client/Server, MongoDB, Material-UI, Azure Functions, AWS Lambda <br />
 (Using free tier cloud services, please wait for service to wake up, refresh page if necessary) <br />
 Frontend on AWS: https://prod.d152hqmm9tnt5p.amplifyapp.com <br />
 Frontend on Azure: https://kimmolepola-bookapp-frontend.azurewebsites.net <br />
