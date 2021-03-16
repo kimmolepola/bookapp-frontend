@@ -15,7 +15,7 @@ import {
 
 const categories = [
   {
-    id: 'Develop',
+    id: 'Browse',
     children: [
       { id: 'Books', icon: <LibraryBooksIcon />, active: true },
       { id: 'Authors', icon: <PeopleIcon /> },
@@ -41,6 +41,12 @@ const styles = (theme) => ({
     },
   },
   itemCategory: {
+    backgroundColor: '#3e2330',
+    boxShadow: '0 -1px 0 #544049 inset',
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+  },
+  xitemCategory: {
     backgroundColor: '#232f3e',
     boxShadow: '0 -1px 0 #404854 inset',
     paddingTop: theme.spacing(2),
@@ -51,6 +57,9 @@ const styles = (theme) => ({
     color: theme.palette.common.white,
   },
   itemActiveItem: {
+    color: '#ff4d88',
+  },
+  xitemActiveItem: {
     color: '#4fc3f7',
   },
   itemPrimary: {

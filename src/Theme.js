@@ -3,6 +3,11 @@ import { createMuiTheme } from '@material-ui/core/styles';
 const theme = createMuiTheme({
   palette: {
     primary: {
+      light: '#FFB6C1',
+      main: '#DB7093',
+      dark: '#C71585',
+    },
+    xprimary: {
       light: '#63ccff',
       main: '#009be5',
       dark: '#006db3',
@@ -35,7 +40,8 @@ export const bookapptheme = {
   overrides: {
     MuiDrawer: {
       paper: {
-        backgroundColor: '#18202c',
+        backgroundColor: '#2c1821',
+        xbackgroundColor: '#18202c',
       },
     },
     MuiButton: {

@@ -192,7 +192,7 @@ function Header(props) {
         <Tabs value={tab} textColor="inherit" onChange={onTabChange}>
           <Tab textColor="inherit" label="Library" />
           <Tab textColor="inherit" label="Recommended" />
-          <Tab textColor="inherit" label="Add book" />
+          <Tab textColor="inherit" label="Add a book" />
         </Tabs>
         )}
         {page === 'Authors' && (!user || (user && !user.username))

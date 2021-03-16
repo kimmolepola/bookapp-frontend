@@ -9,11 +9,15 @@ import {
 import Slide from '@material-ui/core/Slide';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import { Modal, Paper } from '@material-ui/core';
+import {
+  Modal, Paper, Container, Grid, Typography,
+} from '@material-ui/core';
 import Navigator from './Navigator';
 import Content from './Content';
 import Header from './Header';
-import { bookapptheme as theme, drawerWidth, styles } from './Theme';
+import {
+  bookapptheme, bookapptheme as theme, drawerWidth, styles,
+} from './Theme';
 import {
   LOGIN, CREATE_USER, ME, BOOK_ADDED,
 } from './gql_defs';
@@ -72,9 +76,36 @@ function App({ classes }) {
 
   const Trans = ({ color }) => (
     function TransitionLeft(props) {
-      return <Slide {...props} style={{ backgroundColor: color }} direction="left" />;
+      console.log('props: ', props);
+
+      return (
+        <Slide
+          {...props}
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}
+          direction="left"
+        >
+          <Paper
+            style={{
+              backgroundColor: color,
+              paddingLeft: bookapptheme.spacing(2),
+              paddingRight: bookapptheme.spacing(2),
+              paddingTop: bookapptheme.spacing(1),
+              paddingBottom: bookapptheme.spacing(1),
+            }}
+          >
+            <Typography variant="body2">
+              <div style={{ color: 'white' }}>{props.children.props.message /* eslint-disable-line react/destructuring-assignment */}</div>
+            </Typography>
+
+          </Paper>
+        </Slide>
+      );
     }
   );
+
+  // {props.children.props.message /* eslint-disable-line react/destructuring-assignment */}
 
   const snackbarHandleClick = (Transition) => {
     setSnackbarTransition(() => Transition);
@@ -248,7 +279,10 @@ function App({ classes }) {
           onClose={() => setHelpModalOpen(false)}
           aria-labelledby="help modal"
         >
-          <div>help</div>
+          <div style={modalStyle} className={classes.loginPaper}>
+            This app is a worksample based on the Fullstackopen course <a href="https://fullstackopen.com/en/part8">assignment</a>.
+            The UI uses Material-UI Paperbase theme. {!(user && user.username) && 'Sign in to see more content.'}
+          </div>
         </Modal>
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}

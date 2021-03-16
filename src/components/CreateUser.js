@@ -4,7 +4,7 @@ import {
   TextField, Button, Container, Grid, Typography, Box,
 } from '@material-ui/core';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-import { styles } from '../Theme';
+import { styles, bookapptheme } from '../Theme';
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -74,7 +74,7 @@ const CreateUser = React.forwardRef(({
   };
   return (
     <div ref={ref}>
-      <Typography color="primary" variant="h3" gutterBottom>
+      <Typography style={{ marginTop: bookapptheme.spacing(2) }} color="primary" variant="h3" gutterBottom>
         Sign up
       </Typography>
       <ValidatorForm onSubmit={submit}>
