@@ -7,10 +7,10 @@ import { ApolloClient } from 'apollo-boost';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
-
 // import { split } from 'apollo-link';
 // import { WebSocketLink } from 'apollo-link-ws';
 // simport { getMainDefinition } from 'apollo-utilities';
+
 import App from './App';
 
 require('dotenv').config();
