@@ -308,7 +308,7 @@ function App({ classes }) {
           </main>
 
           <footer className={classes.footer}>
-            footer
+            Book app source code at <a href="https://github.com/kimmolepola/bookapp-frontend">GitHub</a>
           </footer>
         </div>
       </div>
